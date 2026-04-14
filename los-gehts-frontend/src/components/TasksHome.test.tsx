@@ -1,5 +1,21 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import TasksHome from './TasksHome'
+import { completeTask, createTask } from '@/services/tasks'
+
+jest.mock('@/components/AppHeader', () => {
+  function MockAppHeader() {
+    return <div data-testid="app-header" />
+  }
+
+  MockAppHeader.displayName = 'MockAppHeader'
+
+  return MockAppHeader
+})
+
+jest.mock('@/services/tasks', () => ({
+  createTask: jest.fn(),
+  completeTask: jest.fn(),
+}))
 
 describe('TasksHome', () => {
   // Teste 1: renderização básica
@@ -54,5 +70,59 @@ describe('TasksHome', () => {
 
     expect(screen.getByText('Voce ainda não tem tarefas cadastradas')).toBeInTheDocument()
     expect(screen.getByText('Crie tarefas e as organize')).toBeInTheDocument()
+  })
+
+  it('Deve adicionar uma nova tarefa', async () => {
+    ;(createTask as jest.Mock).mockResolvedValue({
+      id: 1,
+      title: 'Estudar React',
+      completed: false,
+    })
+
+    render(<TasksHome />)
+
+    fireEvent.change(screen.getByPlaceholderText('Adicione uma nova tarefa'), {
+      target: { value: 'Estudar React' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /criar \+/i }))
+
+    await waitFor(() => {
+      expect(createTask).toHaveBeenCalledWith('Estudar React')
+      expect(screen.getByText('Estudar React')).toBeInTheDocument()
+    })
+
+    expect(screen.queryByText('Voce ainda não tem tarefas cadastradas')).not.toBeInTheDocument()
+    expect(screen.getAllByText('1')).toHaveLength(1)
+    expect(screen.getByRole('checkbox', { name: /concluir tarefa estudar react/i })).not.toBeChecked()
+  })
+
+  it('Deve concluir uma tarefa adicionada', async () => {
+    ;(createTask as jest.Mock).mockResolvedValue({
+      id: 1,
+      title: 'Finalizar testes',
+      completed: false,
+    })
+    ;(completeTask as jest.Mock).mockResolvedValue({
+      id: 1,
+      title: 'Finalizar testes',
+      completed: true,
+    })
+
+    render(<TasksHome />)
+
+    fireEvent.change(screen.getByPlaceholderText('Adicione uma nova tarefa'), {
+      target: { value: 'Finalizar testes' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /criar \+/i }))
+
+    const checkbox = await screen.findByRole('checkbox', { name: /concluir tarefa finalizar testes/i })
+    fireEvent.click(checkbox)
+
+    await waitFor(() => {
+      expect(completeTask).toHaveBeenCalledWith(1)
+      expect(checkbox).toBeChecked()
+    })
+
+    expect(screen.getAllByText('1')).toHaveLength(2)
   })
 })

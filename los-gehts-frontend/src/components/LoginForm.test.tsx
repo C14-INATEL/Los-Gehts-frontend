@@ -10,12 +10,15 @@ jest.mock('@/services/auth', () => ({
 // Mock do useRouter e useSearchParams
 const pushMock = jest.fn()
 
+// Mock para o get do useSearchParams
+let getMock = jest.fn()
+
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: pushMock,
   }),
   useSearchParams: () => ({
-    get: () => null,
+    get: getMock,
   }),
 }))
 
@@ -23,6 +26,7 @@ describe('LoginForm', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     localStorage.clear()
+    getMock.mockReset()
   })
 
   // Teste 1: login bem-sucedido
@@ -74,5 +78,16 @@ describe('LoginForm', () => {
         screen.getByText('Usuario ou senha incorretos')
       ).toBeInTheDocument() // Verifica se a mensagem de erro é exibida
     })
+  })
+
+  // Teste 3: exibir mensagem de sucesso
+  it('Deve exibir mensagem de sucesso quando houver query param success', async () => {
+    getMock.mockReturnValue('true')
+
+    render(<LoginForm />)
+
+    expect(
+      await screen.findByText('Usuário criado com sucesso')
+    ).toBeInTheDocument() // Verifica se a mensagem de sucesso é exibida
   })
 })

@@ -11,7 +11,7 @@ jest.mock('@/services/auth', () => ({
 const pushMock = jest.fn()
 
 // Mock para o get do useSearchParams
-let getMock = jest.fn()
+const getMock = jest.fn()
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({

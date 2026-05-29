@@ -1,0 +1,26 @@
+pipeline {
+  agent any
+
+  environment {
+    CI = 'true'
+    NEXT_TELEMETRY_DISABLED = '1'
+  }
+
+  stages {
+    stage('Install') {
+      steps {
+        dir('los-gehts-frontend') {
+          sh 'npm ci'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        dir('los-gehts-frontend') {
+          sh 'npm test -- --runInBand --ci'
+        }
+      }
+    }
+  }
+}

@@ -4,6 +4,29 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "@/services/auth";
 
+function getErrorMessages(error: unknown) {
+  if (Array.isArray(error)) {
+    return error.map((message) =>
+      typeof message === "string" ? message : "Erro desconhecido"
+    );
+  }
+
+  if (error instanceof Error) {
+    return [error.message];
+  }
+
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return [error.message];
+  }
+
+  return ["Erro desconhecido"];
+}
+
 export default function RegisterForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,12 +56,8 @@ export default function RegisterForm() {
 
       router.push("/login?success=1");
 
-    } catch (error: any) {
-      if (Array.isArray(error)) {
-        setError(error);
-      } else {
-        setError([error.message || "Erro desconhecido"]);
-      }
+    } catch (error: unknown) {
+      setError(getErrorMessages(error));
     }
   }
 

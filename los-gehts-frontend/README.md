@@ -22,16 +22,7 @@ Antes de executar o projeto, instale:
 - npm
 - Backend da aplicação rodando em `http://127.0.0.1:8000`
 
-O frontend consome os seguintes endpoints do backend:
-
-- `POST /auth/login`
-- `POST /auth/register`
-- `GET /tasks/pending`
-- `GET /tasks/completed`
-- `POST /tasks/`
-- `POST /tasks/:id/complete`
-- `PUT /tasks/:id`
-- `DELETE /tasks/:id`
+Veja a seção [Integração com Backend](#integração-com-backend) para detalhes sobre o contrato de API.
 
 ## Instalação
 
@@ -71,36 +62,6 @@ Para executar a build:
 
 ```bash
 npm run start
-```
-
-## Scripts Disponíveis
-
-```bash
-npm run dev
-```
-
-Inicia o servidor de desenvolvimento.
-
-```bash
-npm run build
-```
-
-Gera a versão de produção.
-
-```bash
-npm run start
-```
-
-Executa a aplicação após o build.
-
-```bash
-npm run test
-```
-
-Executa os testes unitários.
-
-```bash
-npm run typecheck
 ```
 
 ## Uso
@@ -156,13 +117,33 @@ Na tela de tarefas, é possível:
 - Mocks dos services para isolar comportamento dos componentes.
 - Cobertura de cenários de sucesso, validação e erro.
 
-## Estrutura do Projeto
+## Refactorings e Organização
+
+### Estrutura do Projeto
+
+O projeto foi reorganizado para melhor separação de responsabilidades:
+
+- **`src/app/`** — Páginas e layouts do Next.js, incluindo `TasksHome.tsx` como componente-container de rota
+- **`src/components/`** — Componentes de UI reutilizáveis (forms, listas, cards, headers)
+- **`src/services/`** — Lógica de integração com API (auth, tasks, client HTTP)
+- **`src/__tests__/`** — Testes unitários centralizados
+
+### Estrutura de Diretórios
 
 ```text
 src/
+  __tests__/
+    LoginForm.test.tsx
+    RegisterForm.test.tsx
+    TasksHome.test.tsx
   app/
     login/
+      layout.tsx
+      page.tsx
     register/
+      layout.tsx
+      page.tsx
+    TasksHome.tsx
     globals.css
     layout.tsx
     page.tsx
@@ -175,33 +156,11 @@ src/
     TaskItem.tsx
     TaskList.tsx
     TaskStats.tsx
-    TasksHome.tsx
-  hooks/
-  lib/
   services/
+    api.ts
     auth.ts
     tasks.ts
-  types/
 ```
-
-## Testes
-
-Para executar todos os testes:
-
-```bash
-npm run test
-```
-
-## Refactorings e Organização
-
-### Estrutura do Projeto
-
-O projeto foi reorganizado para melhor separação de responsabilidades:
-
-- **`src/app/`** — Páginas e layouts do Next.js, incluindo `TasksHome.tsx` como componente-container de rota
-- **`src/components/`** — Componentes de UI reutilizáveis (forms, listas, cards, headers)
-- **`src/services/`** — Lógica de integração com API (auth, tasks, client HTTP)
-- **`src/__tests__/`** — Testes unitários centralizados
 
 ### Refactorings Principais
 
@@ -239,22 +198,58 @@ O frontend é consumidor de uma API REST que deve estar rodando em `http://127.0
 
 ### Pontos de Atenção
 
-- Arquivo `.env.local` não é versionado; use `.env.example` como referência
-- Após alterar `.env.local` ou `next.config.ts`, reinicie `npm run dev`
-- Se receber `401 Unauthorized`, verifique se o token está válido no backend
-- Se receber `OPTIONS /tasks/ 405`, o backend pode não ter CORS configurado; use o proxy do Next.js chamando `/api/...`
-- Em produção, defina `NEXT_PUBLIC_API_BASE_URL` ou implemente CORS no backend
+- **Arquivo `.env.local`** não é versionado; use `.env.example` como referência e configure `API_BASE_URL` com a URL real do backend
+- **Após alterar `.env.local` ou `next.config.ts`**, reinicie `npm run dev` — hot reload não é confiável para essas configurações
+- **Se receber `401 Unauthorized`**, verifique se o token está válido no backend e se `localStorage.token` existe
+- **Se receber `OPTIONS /tasks/ 405`**, o backend pode não ter CORS configurado; use o proxy do Next.js chamando `/api/...` em vez de chamar direto
+- **Se receber `POST /tasks 307`**, confira se a criação está usando `/tasks/` (com barra final)
+- **Em produção**, defina `NEXT_PUBLIC_API_BASE_URL` ou implemente CORS no backend para requisições cross-origin
+
+## Desenvolvimento e Contribuição
+
+### Verificações antes de fazer commit
+
+```bash
+# Rodar testes
+npm run test
+
+# Verificar tipos
+npm run typecheck
+
+# Verificar lint
+npm run lint
+
+# Ou tudo junto
+npm run test && npm run typecheck && npm run lint
 ```
 
-Esse documento registra o que foi alterado, por que foi alterado e quais commits ou PRs servem como evidência.
+### Scripts de desenvolvimento
+
+```bash
+npm run dev          # Inicia servidor com hot reload
+npm run build        # Build de produção
+npm run start        # Executa build de produção localmente
+npm run lint         # Verifica código com ESLint
+npm run typecheck    # Valida tipos TypeScript sem emitir código
+npm run test         # Executa testes unitários
+```
+
+### Fluxo de trabalho
+
+1. Crie uma branch a partir de `main`
+2. Faça suas alterações
+3. Execute as verificações (`npm run test`, `npm run typecheck`, `npm run lint`)
+4. Abra um Pull Request
+5. Após aprovação, faça merge para `main`
 
 ## Uso de IA
 
-Foi utilizada assistência de IA durante o desenvolvimento para apoiar em atividades .
+Foi utilizada assistência de IA durante o desenvolvimento para apoiar em atividades de estruturação e refactoring.
 
 A IA foi usada principalmente para:
 
-- identificar o que faltava na tela de tarefas em relação ao layout esperado;
-- sugerir refactorings e possíveis melhorias;
-- visualizar e atualizar testes unitários;
-- estruturar este README.
+- Identificar o que faltava na tela de tarefas em relação ao layout esperado
+- Sugerir refactorings e reorganização do projeto para melhor separação de responsabilidades
+- Atualizar e expandir testes unitários
+- Estruturar a organização de diretórios e componentes
+- Documentar o README com explicações claras sobre fluxos e pontos de atenção

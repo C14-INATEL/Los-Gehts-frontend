@@ -9,9 +9,6 @@
   --border: rgba(148, 163, 184, 0.28);
   --primary: #8284FA;
   --primary-hover: #787af3;
-}
-
-@theme inline {
   --color-background: var(--background);
   --color-background-secondary: var(--background-secondary);
   --color-foreground: var(--foreground);

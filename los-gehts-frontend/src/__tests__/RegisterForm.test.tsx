@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import RegisterForm from './RegisterForm'
+import RegisterForm from '@/components/RegisterForm'
 import { register } from '@/services/auth'
 
 // Mock do register

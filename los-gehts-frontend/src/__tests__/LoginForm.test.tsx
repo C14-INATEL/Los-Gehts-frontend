@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import LoginForm from './LoginForm'
+import LoginForm from '@/components/LoginForm'
 import { login } from '@/services/auth'
 
 // Mock do login

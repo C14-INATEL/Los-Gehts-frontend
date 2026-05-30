@@ -192,12 +192,58 @@ Para executar todos os testes:
 npm run test
 ```
 
-## Refactoring
+## Refactorings e Organização
 
-O histórico de refactorings aplicados ao projeto está documentado em:
+### Estrutura do Projeto
 
-```text
-docs/refactoring.md
+O projeto foi reorganizado para melhor separação de responsabilidades:
+
+- **`src/app/`** — Páginas e layouts do Next.js, incluindo `TasksHome.tsx` como componente-container de rota
+- **`src/components/`** — Componentes de UI reutilizáveis (forms, listas, cards, headers)
+- **`src/services/`** — Lógica de integração com API (auth, tasks, client HTTP)
+- **`src/__tests__/`** — Testes unitários centralizados
+
+### Refactorings Principais
+
+| Mudança | Motivo | Benefício |
+| --- | --- | --- |
+| Separação de serviços em `src/services/` | Isolar chamadas HTTP da lógica de componentes | Facilita testes com mocks e manutenção da integração com API |
+| Testes com mocks de services | Evitar dependência de backend nos testes | Suite determinística e mais rápida |
+| Quebra de `TasksHome` em componentes menores | Componente muito grande e difícil de manter | Melhor legibilidade, testabilidade e reutilização |
+| Proxy de API via `next.config.ts` | Evitar CORS direto do navegador com backend | Requisições mais confiáveis em desenvolvimento |
+| Centralização de `fetchApi` em `api.ts` | Reduzir duplicação entre services | Padrão único para autenticação (Bearer Token) e tratamento de erro |
+| Proteção de rota em `TasksHome` | Redirecionar usuários não autenticados | Acesso apenas com token válido no `localStorage` |
+| Organização de testes em `__tests__/` | Centralizar e segregar arquivos de teste | Estrutura mais clara e padrão de mercado |
+
+### Integração com Backend
+
+O frontend é consumidor de uma API REST que deve estar rodando em `http://127.0.0.1:8000` (configurável via `.env.local`).
+
+**Contrato de Autenticação:**
+- `POST /auth/login` — Login com `username` e `password`, retorna `JWT`
+- `POST /auth/register` — Registro com `username` e `password`, retorna `JWT`
+
+**Contrato de Tarefas (requer Bearer Token):**
+- `GET /tasks/pending` — Lista tarefas não concluídas
+- `GET /tasks/completed` — Lista tarefas concluídas
+- `POST /tasks/` — Cria nova tarefa com `title`
+- `POST /tasks/{id}/complete` — Marca tarefa como concluída
+- `PUT /tasks/{id}` — Edita título da tarefa
+- `DELETE /tasks/{id}` — Exclui tarefa
+
+**Fluxo de Autenticação:**
+1. Usuário faz login ou registro
+2. Backend retorna JWT em `data.JWT`
+3. Frontend salva token em `localStorage.token`
+4. Requests subsequentes incluem `Authorization: Bearer <token>` automaticamente via `fetchApi`
+
+### Pontos de Atenção
+
+- Arquivo `.env.local` não é versionado; use `.env.example` como referência
+- Após alterar `.env.local` ou `next.config.ts`, reinicie `npm run dev`
+- Se receber `401 Unauthorized`, verifique se o token está válido no backend
+- Se receber `OPTIONS /tasks/ 405`, o backend pode não ter CORS configurado; use o proxy do Next.js chamando `/api/...`
+- Em produção, defina `NEXT_PUBLIC_API_BASE_URL` ou implemente CORS no backend
 ```
 
 Esse documento registra o que foi alterado, por que foi alterado e quais commits ou PRs servem como evidência.

@@ -196,14 +196,6 @@ O frontend é consumidor de uma API REST que deve estar rodando em `http://127.0
 3. Frontend salva token em `localStorage.token`
 4. Requests subsequentes incluem `Authorization: Bearer <token>` automaticamente via `fetchApi`
 
-### Pontos de Atenção
-
-- **Arquivo `.env.local`** não é versionado; use `.env.example` como referência e configure `API_BASE_URL` com a URL real do backend
-- **Após alterar `.env.local` ou `next.config.ts`**, reinicie `npm run dev` — hot reload não é confiável para essas configurações
-- **Se receber `401 Unauthorized`**, verifique se o token está válido no backend e se `localStorage.token` existe
-- **Se receber `OPTIONS /tasks/ 405`**, o backend pode não ter CORS configurado; use o proxy do Next.js chamando `/api/...` em vez de chamar direto
-- **Se receber `POST /tasks 307`**, confira se a criação está usando `/tasks/` (com barra final)
-- **Em produção**, defina `NEXT_PUBLIC_API_BASE_URL` ou implemente CORS no backend para requisições cross-origin
 
 ## Desenvolvimento e Contribuição
 

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import TasksHome from './TasksHome'
+import TasksHome from '@/app/TasksHome'
 import {
   completeTask,
   createTask,

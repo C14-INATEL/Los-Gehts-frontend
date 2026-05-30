@@ -18,6 +18,13 @@ jest.mock('@/components/AppHeader', () => {
   return MockAppHeader
 })
 
+const pushMock = jest.fn()
+const routerMock = { push: pushMock }
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => routerMock,
+}))
+
 jest.mock('@/services/tasks', () => ({
   completeTask: jest.fn(),
   createTask: jest.fn(),
@@ -29,6 +36,7 @@ jest.mock('@/services/tasks', () => ({
 describe('TasksHome', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    localStorage.setItem('token', 'fake-token')
     ;(getTasks as jest.Mock).mockResolvedValue([])
   })
 

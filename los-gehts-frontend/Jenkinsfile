@@ -7,11 +7,17 @@ pipeline {
   }
 
   stages {
-    stage('Install') {
+    stage('Install Dependencies') {
       steps {
         dir('los-gehts-frontend') {
           sh 'npm ci'
         }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'npm run build'
       }
     }
 

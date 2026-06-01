@@ -4,6 +4,8 @@ pipeline {
   environment {
     CI = 'true'
     NEXT_TELEMETRY_DISABLED = '1'
+    SMTP_SERVER = 'smtp.gmail.com'
+    SMTP_PORT = '587'
   }
 
   stages {
@@ -30,6 +32,15 @@ pipeline {
         }
       }
     }  
+
+    stage('Email') {
+      steps {
+        dir('los-gehts-frontend') {
+          sh 'python3 scripts/send_email.py'
+          echo "E-mail enviado para ${EMAIL_TO}"
+        }
+      }
+    }
   }
 
   post {

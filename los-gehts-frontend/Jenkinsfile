@@ -15,12 +15,6 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        sh 'npm run build'
-      }
-    }
-
     stage('Test') {
       steps {
         dir('los-gehts-frontend') {
@@ -28,5 +22,22 @@ pipeline {
         }
       }
     }
+
+    stage('Build') {
+      steps {
+        dir('los-gehts-frontend') {
+          sh 'npm run build'
+        }
+      }
+    }  
   }
+
+  post {
+    success {
+      archiveArtifacts(
+          artifacts: 'los-gehts-frontend/.next/**',
+          fingerprint: true
+      )
+    } 
+  } 
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import TaskForm from "@/components/TaskForm";
 import TaskList from "@/components/TaskList";
@@ -15,6 +16,7 @@ import {
 } from "@/services/tasks";
 
 export default function TasksHome() {
+  const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,6 +27,13 @@ export default function TasksHome() {
     let shouldUpdateState = true;
 
     async function loadTasks() {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
       try {
         const loadedTasks = await getTasks();
 
@@ -50,7 +59,7 @@ export default function TasksHome() {
     return () => {
       shouldUpdateState = false;
     };
-  }, []);
+  }, [router]);
 
   async function handleCreateTask() {
     const trimmedTask = newTask.trim();

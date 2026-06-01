@@ -22,16 +22,7 @@ Antes de executar o projeto, instale:
 - npm
 - Backend da aplicação rodando em `http://127.0.0.1:8000`
 
-O frontend consome os seguintes endpoints do backend:
-
-- `POST /auth/login`
-- `POST /auth/register`
-- `GET /tasks/pending`
-- `GET /tasks/completed`
-- `POST /tasks/`
-- `POST /tasks/:id/complete`
-- `PUT /tasks/:id`
-- `DELETE /tasks/:id`
+Veja a seção [Integração com Backend](#integração-com-backend) para detalhes sobre o contrato de API.
 
 ## Instalação
 
@@ -71,36 +62,6 @@ Para executar a build:
 
 ```bash
 npm run start
-```
-
-## Scripts Disponíveis
-
-```bash
-npm run dev
-```
-
-Inicia o servidor de desenvolvimento.
-
-```bash
-npm run build
-```
-
-Gera a versão de produção.
-
-```bash
-npm run start
-```
-
-Executa a aplicação após o build.
-
-```bash
-npm run test
-```
-
-Executa os testes unitários.
-
-```bash
-npm run typecheck
 ```
 
 ## Uso
@@ -156,13 +117,33 @@ Na tela de tarefas, é possível:
 - Mocks dos services para isolar comportamento dos componentes.
 - Cobertura de cenários de sucesso, validação e erro.
 
-## Estrutura do Projeto
+## Refactorings e Organização
+
+### Estrutura do Projeto
+
+O projeto foi reorganizado para melhor separação de responsabilidades:
+
+- **`src/app/`** — Páginas e layouts do Next.js, incluindo `TasksHome.tsx` como componente-container de rota
+- **`src/components/`** — Componentes de UI reutilizáveis (forms, listas, cards, headers)
+- **`src/services/`** — Lógica de integração com API (auth, tasks, client HTTP)
+- **`src/__tests__/`** — Testes unitários centralizados
+
+### Estrutura de Diretórios
 
 ```text
 src/
+  __tests__/
+    LoginForm.test.tsx
+    RegisterForm.test.tsx
+    TasksHome.test.tsx
   app/
     login/
+      layout.tsx
+      page.tsx
     register/
+      layout.tsx
+      page.tsx
+    TasksHome.tsx
     globals.css
     layout.tsx
     page.tsx
@@ -175,40 +156,92 @@ src/
     TaskItem.tsx
     TaskList.tsx
     TaskStats.tsx
-    TasksHome.tsx
-  hooks/
-  lib/
   services/
+    api.ts
     auth.ts
     tasks.ts
-  types/
 ```
 
-## Testes
+### Refactorings Principais
 
-Para executar todos os testes:
+| Mudança | Motivo | Benefício |
+| --- | --- | --- |
+| Separação de serviços em `src/services/` | Isolar chamadas HTTP da lógica de componentes | Facilita testes com mocks e manutenção da integração com API |
+| Testes com mocks de services | Evitar dependência de backend nos testes | Suite determinística e mais rápida |
+| Quebra de `TasksHome` em componentes menores | Componente muito grande e difícil de manter | Melhor legibilidade, testabilidade e reutilização |
+| Proxy de API via `next.config.ts` | Evitar CORS direto do navegador com backend | Requisições mais confiáveis em desenvolvimento |
+| Centralização de `fetchApi` em `api.ts` | Reduzir duplicação entre services | Padrão único para autenticação (Bearer Token) e tratamento de erro |
+| Proteção de rota em `TasksHome` | Redirecionar usuários não autenticados | Acesso apenas com token válido no `localStorage` |
+| Organização de testes em `__tests__/` | Centralizar e segregar arquivos de teste | Estrutura mais clara e padrão de mercado |
+
+### Integração com Backend
+
+O frontend é consumidor de uma API REST que deve estar rodando em `http://127.0.0.1:8000` (configurável via `.env.local`).
+
+**Contrato de Autenticação:**
+- `POST /auth/login` — Login com `username` e `password`, retorna `JWT`
+- `POST /auth/register` — Registro com `username` e `password`, retorna `JWT`
+
+**Contrato de Tarefas (requer Bearer Token):**
+- `GET /tasks/pending` — Lista tarefas não concluídas
+- `GET /tasks/completed` — Lista tarefas concluídas
+- `POST /tasks/` — Cria nova tarefa com `title`
+- `POST /tasks/{id}/complete` — Marca tarefa como concluída
+- `PUT /tasks/{id}` — Edita título da tarefa
+- `DELETE /tasks/{id}` — Exclui tarefa
+
+**Fluxo de Autenticação:**
+1. Usuário faz login ou registro
+2. Backend retorna JWT em `data.JWT`
+3. Frontend salva token em `localStorage.token`
+4. Requests subsequentes incluem `Authorization: Bearer <token>` automaticamente via `fetchApi`
+
+
+## Desenvolvimento e Contribuição
+
+### Verificações antes de fazer commit
 
 ```bash
+# Rodar testes
 npm run test
+
+# Verificar tipos
+npm run typecheck
+
+# Verificar lint
+npm run lint
+
+# Ou tudo junto
+npm run test && npm run typecheck && npm run lint
 ```
 
-## Refactoring
+### Scripts de desenvolvimento
 
-O histórico de refactorings aplicados ao projeto está documentado em:
-
-```text
-docs/refactoring.md
+```bash
+npm run dev          # Inicia servidor com hot reload
+npm run build        # Build de produção
+npm run start        # Executa build de produção localmente
+npm run lint         # Verifica código com ESLint
+npm run typecheck    # Valida tipos TypeScript sem emitir código
+npm run test         # Executa testes unitários
 ```
 
-Esse documento registra o que foi alterado, por que foi alterado e quais commits ou PRs servem como evidência.
+### Fluxo de trabalho
+
+1. Crie uma branch a partir de `main`
+2. Faça suas alterações
+3. Execute as verificações (`npm run test`, `npm run typecheck`, `npm run lint`)
+4. Abra um Pull Request
+5. Após aprovação, faça merge para `main`
 
 ## Uso de IA
 
-Foi utilizada assistência de IA durante o desenvolvimento para apoiar em atividades .
+Foi utilizada assistência de IA durante o desenvolvimento para apoiar em atividades de estruturação e refactoring.
 
 A IA foi usada principalmente para:
 
-- identificar o que faltava na tela de tarefas em relação ao layout esperado;
-- sugerir refactorings e possíveis melhorias;
-- visualizar e atualizar testes unitários;
-- estruturar este README.
+- Identificar o que faltava na tela de tarefas em relação ao layout esperado
+- Sugerir refactorings e reorganização do projeto para melhor separação de responsabilidades
+- Atualizar e expandir testes unitários
+- Estruturar a organização de diretórios e componentes
+- Documentar o README com explicações claras sobre fluxos e pontos de atenção

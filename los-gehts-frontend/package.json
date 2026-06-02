@@ -8,7 +8,12 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest --runInBand --ci --coverage --coverageDirectory=coverage --coverageReporters=text --coverageReporters=lcov --reporters=default --reporters=jest-junit"
+  },
+  "jest-junit": {
+    "outputDirectory": "test-results/jest",
+    "outputName": "junit.xml"
   },
   "dependencies": {
     "next": "16.1.7",
@@ -31,6 +36,7 @@
     "jest-environment-jsdom": "^30.3.0",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "jest-junit": "^13.0.0"
   }
 }

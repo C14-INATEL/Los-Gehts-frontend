@@ -234,14 +234,152 @@ npm run test         # Executa testes unitários
 4. Abra um Pull Request
 5. Após aprovação, faça merge para `main`
 
+<<<<<<< Updated upstream
+=======
+## CI/CD com Jenkins
+
+O projeto utiliza Jenkins para automação do processo de Integração Contínua (CI). O pipeline é definido através de um `Jenkinsfile` versionado no repositório.
+
+### Pré-requisitos
+
+Antes de executar o Jenkins, é necessário ter instalado:
+
+- Docker
+- Docker Compose
+
+### Inicialização do Jenkins
+
+Acesse o diretório de infraestrutura:
+
+```bash
+cd los-gehts-frontend && cd ci
+```
+
+Suba o Jenkins:
+
+```bash
+docker compose up --build -d
+```
+
+O Jenkins ficará disponível em:
+
+```text
+http://localhost:8080
+```
+
+### Configuração do Pipeline
+
+1. Acesse o Jenkins.
+2. Clique em **New Item**.
+3. Escolha o tipo **Pipeline**.
+4. Informe um nome para o pipeline.
+5. Em **Pipeline Definition**, selecione:
+
+```text
+Pipeline script from SCM
+```
+
+6. Em **SCM**, selecione:
+
+```text
+Git
+```
+
+7. Configure a URL do repositório:
+
+```text
+https://github.com/C14-INATEL/Los-Gehts-frontend.git
+```
+
+8. Configure o caminho do Jenkinsfile:
+
+```text
+los-gehts-frontend/Jenkinsfile
+```
+
+### Variáveis de Ambiente
+
+Para envio de notificações por e-mail, configure as seguintes variáveis no Jenkins:
+
+| Variável | Descrição |
+|-----------|-----------|
+| EMAIL_TO | Lista de destinatários separados por vírgula |
+| SMTP_USER | Usuário SMTP |
+| SMTP_PASS | Senha SMTP |
+
+Exemplo:
+
+```text
+EMAIL_TO=usuario1@email.com,usuario2@email.com
+SMTP_USER=conta@email.com
+SMTP_PASS=senha123
+```
+
+### Etapas do Pipeline
+
+| Stage | Descrição |
+|---------|-----------|
+| Install Dependencies | Instala as dependências do projeto com `npm ci` |
+| Lint | Executa a análise estática do código com ESLint |
+| Test | Executa os testes automatizados com Jest |
+| Build | Gera a build de produção do Next.js |
+| Email | Envia uma notificação por e-mail ao final da execução |
+| Archive Artifacts | Armazena os artefatos gerados pela build |
+
+### Execução Manual
+
+1. Acesse o pipeline criado.
+2. Clique em **Build Now**.
+3. Acompanhe a execução em **Console Output**.
+
+### Artefatos
+
+Em execuções bem-sucedidas, o Jenkins armazena os artefatos gerados pela build do frontend, permitindo inspeção e rastreabilidade dos resultados produzidos pelo pipeline.
+
+>>>>>>> Stashed changes
 ## Uso de IA
 
 Foi utilizada assistência de IA durante o desenvolvimento para apoiar em atividades de estruturação e refactoring.
 
 A IA foi usada principalmente para:
 
+<<<<<<< Updated upstream
 - Identificar o que faltava na tela de tarefas em relação ao layout esperado
 - Sugerir refactorings e reorganização do projeto para melhor separação de responsabilidades
 - Atualizar e expandir testes unitários
 - Estruturar a organização de diretórios e componentes
 - Documentar o README com explicações claras sobre fluxos e pontos de atenção
+=======
+* ChatGPT
+* GitHub Copilot
+
+### Finalidade de Uso
+
+As ferramentas de IA foram utilizadas para:
+
+* Geração de código;
+* Criação e ajuste de testes automatizados;
+* Debugging;
+
+### Exemplos de Prompts Utilizados
+
+Os exemplos abaixo representam conversas reais utilizadas durante o desenvolvimento:
+
+1. https://chatgpt.com/share/6a1f3783-7ed4-83e9-97f0-07468a96acbf
+2. https://chatgpt.com/share/6a1f646d-f710-83e9-b7e6-0e0b2a89efd2
+
+
+Todas as respostas fornecidas pelo ChatGPT foram analisadas pelos integrantes e incorporadas ao projeto somente após ajustes necessários.
+
+### Dinâmica de Uso
+
+O uso de IA ocorreu individualmente pelos integrantes da equipe.
+
+O ChatGPT foi utilizado principalmente para auxiliar na geração de código, criação de testes automatizados, resolução de erros e debugging.
+
+O GitHub Copilot foi utilizado durante a implementação do sistema por meio de sugestões de autocomplete, geração de trechos de código e auxílio à produtividade durante o desenvolvimento.
+
+### O Que Não Foi Feito por IA
+
+A definição dos requisitos do projeto, decisões arquiteturais, integração entre frontend e backend, configuração dos ambientes, implementação final das funcionalidades, organização do repositório e validação dos resultados foram realizadas pelos integrantes da equipe.
+>>>>>>> Stashed changes

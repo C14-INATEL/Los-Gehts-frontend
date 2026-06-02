@@ -17,10 +17,18 @@ pipeline {
       }
     }
 
+    stage('Lint') {
+      steps {
+        dir('los-gehts-frontend') {
+          sh 'npm run lint'
+        }
+      }
+    }
+
     stage('Test') {
       steps {
         dir('los-gehts-frontend') {
-          sh 'npm test -- --runInBand --ci'
+          sh 'npm run test:ci'
         }
       }
     }
@@ -31,7 +39,7 @@ pipeline {
           sh 'npm run build'
         }
       }
-    }  
+    }
 
     stage('Email') {
       steps {
@@ -44,11 +52,18 @@ pipeline {
   }
 
   post {
-    success {
-      archiveArtifacts(
-          artifacts: 'los-gehts-frontend/.next/**',
-          fingerprint: true
+    always {
+      junit(
+        allowEmptyResults: true,
+        keepLongStdio: true,
+        testResults: 'los-gehts-frontend/test-results/jest/*.xml'
       )
-    } 
+
+      archiveArtifacts(
+        artifacts: 'los-gehts-frontend/.next/**, los-gehts-frontend/coverage/**, los-gehts-frontend/test-results/jest/**',
+        fingerprint: true,
+        allowEmptyArchive: true
+      )
+    }
   } 
 }

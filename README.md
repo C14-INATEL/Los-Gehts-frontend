@@ -234,8 +234,6 @@ npm run test         # Executa testes unitários
 4. Abra um Pull Request
 5. Após aprovação, faça merge para `main`
 
-<<<<<<< Updated upstream
-=======
 ## CI/CD com Jenkins
 
 O projeto utiliza Jenkins para automação do processo de Integração Contínua (CI). O pipeline é definido através de um `Jenkinsfile` versionado no repositório.
@@ -336,20 +334,12 @@ SMTP_PASS=senha123
 
 Em execuções bem-sucedidas, o Jenkins armazena os artefatos gerados pela build do frontend, permitindo inspeção e rastreabilidade dos resultados produzidos pelo pipeline.
 
->>>>>>> Stashed changes
 ## Uso de IA
 
 Foi utilizada assistência de IA durante o desenvolvimento para apoiar em atividades de estruturação e refactoring.
 
 A IA foi usada principalmente para:
 
-<<<<<<< Updated upstream
-- Identificar o que faltava na tela de tarefas em relação ao layout esperado
-- Sugerir refactorings e reorganização do projeto para melhor separação de responsabilidades
-- Atualizar e expandir testes unitários
-- Estruturar a organização de diretórios e componentes
-- Documentar o README com explicações claras sobre fluxos e pontos de atenção
-=======
 * ChatGPT
 * GitHub Copilot
 
@@ -382,4 +372,3 @@ O GitHub Copilot foi utilizado durante a implementação do sistema por meio de 
 ### O Que Não Foi Feito por IA
 
 A definição dos requisitos do projeto, decisões arquiteturais, integração entre frontend e backend, configuração dos ambientes, implementação final das funcionalidades, organização do repositório e validação dos resultados foram realizadas pelos integrantes da equipe.
->>>>>>> Stashed changes

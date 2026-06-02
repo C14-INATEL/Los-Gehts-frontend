@@ -1,4 +1,4 @@
-import TasksHome from "@/components/TasksHome";
+import TasksHome from "./TasksHome";
 
 export default function Home() {
   return <TasksHome />;

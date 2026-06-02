@@ -2,23 +2,34 @@
 
 import { useState, useEffect } from "react";
 import { login } from "@/services/auth";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
+function getErrorMessage(error: unknown, fallbackMessage: string) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return error.message;
+  }
+
+  return fallbackMessage;
+}
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [success, setSuccess] = useState("");
-  const searchParams = useSearchParams();
+  const [success, setSuccess] = useState(() =>
+    searchParams.get("success") ? "Usuário criado com sucesso" : "",
+  );
   const [error, setError] = useState("");
   const router = useRouter();
-
-  useEffect(() => {
-    const successParam = searchParams.get("success");
-    if (successParam) {
-      setSuccess("Usuário criado com sucesso");
-    }
-  }, []);
 
   useEffect(() => {
     if (!success) return;
@@ -26,7 +37,7 @@ export default function LoginForm() {
     return () => clearTimeout(timer);
   }, [success]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!error) return;
     const timer = setTimeout(() => setError(""), 10000);
     return () => clearTimeout(timer);
@@ -43,8 +54,8 @@ export default function LoginForm() {
 
       router.push("/");
 
-    } catch (error: any) {
-      setError(error.message || "Erro ao fazer login");
+    } catch (error: unknown) {
+      setError(getErrorMessage(error, "Erro ao fazer login"));
     }
   }
 

@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import RegisterForm from './RegisterForm'
+import RegisterForm from '@/components/RegisterForm'
 import { register } from '@/services/auth'
 
 // Mock do register
@@ -77,5 +77,36 @@ describe('RegisterForm', () => {
     })
 
     expect(register).not.toHaveBeenCalled() // Verifica que a função de registro não foi chamada devido ao erro de validação
+  })
+
+  // Teste 3: erro da API
+  it('Deve mostrar erro quando a API retornar erro', async () => {
+    ;(register as jest.Mock).mockRejectedValue({
+      message: 'Erro ao registrar usuário',
+    })
+
+    render(<RegisterForm />)
+
+    fireEvent.change(screen.getByPlaceholderText('Digite seu nome'), {
+      target: { value: 'guilherme' },
+    })
+
+    fireEvent.change(screen.getByPlaceholderText('Crie uma senha'), {
+      target: { value: '123456' },
+    })
+
+    fireEvent.change(screen.getByPlaceholderText('Digite a senha novamente'), {
+      target: { value: '123456' },
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: /registrar/i }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Erro ao registrar usuário') // Verifica se a mensagem de erro da API é exibida
+      ).toBeInTheDocument()
+    })
+
+    expect(register).toHaveBeenCalled() // Verifica que a função de registro foi chamada mesmo com o erro da API
   })
 })

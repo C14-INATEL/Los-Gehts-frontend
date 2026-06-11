@@ -252,8 +252,7 @@ Antes de executar o Jenkins, é necessário ter instalado:
 Acesse o diretório de infraestrutura:
 
 ```bash
-cd los-gehts-frontend
-cd ci
+cd los-gehts-frontend && cd ci
 ```
 
 Suba o Jenkins:
@@ -359,6 +358,7 @@ As ferramentas de IA foram utilizadas para:
 Os exemplos abaixo representam conversas reais utilizadas durante o desenvolvimento:
 
 1. https://chatgpt.com/share/6a1f3783-7ed4-83e9-97f0-07468a96acbf
+2. https://chatgpt.com/share/6a1f646d-f710-83e9-b7e6-0e0b2a89efd2
 
 Todas as respostas fornecidas pelo ChatGPT foram analisadas pelos integrantes e incorporadas ao projeto somente após ajustes necessários.
 

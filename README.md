@@ -13,6 +13,8 @@ O projeto foi desenvolvido com **Next.js**, **React**, **TypeScript**, **Tailwin
 - Jest
 - Testing Library
 - ESLint
+- Docker
+- Jenkins
 
 ## Pré-requisitos
 
@@ -336,9 +338,9 @@ Em execuções bem-sucedidas, o Jenkins armazena os artefatos gerados pela build
 
 ## Uso de IA
 
-Foi utilizada assistência de IA durante o desenvolvimento para apoiar em atividades de estruturação e refactoring.
+Durante o desenvolvimento do projeto foram utilizadas ferramentas de Inteligência Artificial como apoio ao processo de desenvolvimento. Todo o código gerado foi analisado e adaptado pelos integrantes antes de sua incorporação.
 
-A IA foi usada principalmente para:
+### Modelos Utilizados
 
 * ChatGPT
 * GitHub Copilot
@@ -357,7 +359,6 @@ Os exemplos abaixo representam conversas reais utilizadas durante o desenvolvime
 
 1. https://chatgpt.com/share/6a1f3783-7ed4-83e9-97f0-07468a96acbf
 2. https://chatgpt.com/share/6a1f646d-f710-83e9-b7e6-0e0b2a89efd2
-
 
 Todas as respostas fornecidas pelo ChatGPT foram analisadas pelos integrantes e incorporadas ao projeto somente após ajustes necessários.
 

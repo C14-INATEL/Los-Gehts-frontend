@@ -4,10 +4,12 @@ pipeline {
   environment {
     CI = 'true'
     NEXT_TELEMETRY_DISABLED = '1'
+    SMTP_SERVER = 'smtp.gmail.com'
+    SMTP_PORT = '587'
   }
 
   stages {
-    stage('Install') {
+    stage('Install Dependencies') {
       steps {
         dir('los-gehts-frontend') {
           sh 'npm ci'
@@ -15,12 +17,53 @@ pipeline {
       }
     }
 
+    stage('Lint') {
+      steps {
+        dir('los-gehts-frontend') {
+          sh 'npm run lint'
+        }
+      }
+    }
+
     stage('Test') {
       steps {
         dir('los-gehts-frontend') {
-          sh 'npm test -- --runInBand --ci'
+          sh 'npm run test:ci'
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        dir('los-gehts-frontend') {
+          sh 'npm run build'
+        }
+      }
+    }
+
+    stage('Email') {
+      steps {
+        dir('los-gehts-frontend') {
+          sh 'python3 scripts/send_email.py'
+          echo "E-mail enviado para ${EMAIL_TO}"
         }
       }
     }
   }
+
+  post {
+    always {
+      junit(
+        allowEmptyResults: true,
+        keepLongStdio: true,
+        testResults: 'los-gehts-frontend/test-results/jest/*.xml'
+      )
+
+      archiveArtifacts(
+        artifacts: 'los-gehts-frontend/.next/**, los-gehts-frontend/coverage/**, los-gehts-frontend/test-results/jest/**',
+        fingerprint: true,
+        allowEmptyArchive: true
+      )
+    }
+  } 
 }

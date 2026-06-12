@@ -198,6 +198,135 @@ O frontend é consumidor de uma API REST que deve estar rodando em `http://127.0
 3. Frontend salva token em `localStorage.token`
 4. Requests subsequentes incluem `Authorization: Bearer <token>` automaticamente via `fetchApi`
 
+## Histórias de Usuário
+
+### História de Usuário 1 — Cadastro de Usuário
+
+**História**
+
+> Como usuário, eu quero criar uma conta para que possa logar no sistema.
+
+**Critérios de Aceitação**
+
+> **Dado** que estou na página de registro\
+> **Quando** preencho o formulário com um nome de usuário e senha válidos e envio\
+> **Então** minha conta é criada
+
+**Prioridade**: Alta
+
+**Status**: Entregue
+
+**Teste Automatizado**:
+- RegisterForm.test.tsx
+
+---
+
+### História de Usuário 2 — Login de Usuário
+
+**História**
+
+> Como usuário cadastrado, eu quero fazer login para que possa acessar o sistema.
+
+**Critérios de Aceitação**
+
+> **Dado** que estou na página de login\
+> **Quando** preencho o formulário com nome de usuário e senha e envio\
+> **Então** recebo token de autenticação e sou redirecionado para a tela de tarefas
+
+> **Dado** que estou na página de login\
+> **Quando** preencho o formulário com credenciais inválidas e envio\
+> **Então** vejo uma mensagem de erro informando que as credenciais são inválidas
+
+**Prioridade**: Alta
+
+**Status**: Entregue
+
+**Teste Automatizado**:
+- LoginForm.test.tsx
+
+---
+
+### História de Usuário 3 — Criar Tarefas
+
+**História**
+
+> Como usuário autenticado, eu quero criar tarefas para que possa organizar meus afazeres.
+
+**Critérios de Aceitação**
+
+> **Dado** que estou na tela de tarefas\
+> **Quando** preencho o formulário de nova tarefa com nome e envio\
+> **Então** a tarefa é criada
+
+**Prioridade**: Alta
+
+**Status**: Entregue
+
+**Teste Automatizado**:
+- TasksHome.test.tsx
+
+---
+
+### História de Usuário 4 — Editar Tarefas
+
+**História**
+
+> Como usuário autenticado, eu quero editar tarefas para que possa atualizar suas informações.
+
+**Critérios de Aceitação**
+
+> **Dado** que estou na tela de tarefas\
+> **Quando** edito o nome de uma tarefa e salvo\
+> **Então** a tarefa é atualizada com o novo nome
+
+**Prioridade**: Alta
+
+**Status**: Entregue
+
+**Teste Automatizado**:
+- TasksHome.test.tsx
+
+---
+
+### História de Usuário 5 — Excluir Tarefas
+
+**História**
+
+> Como usuário autenticado, eu quero excluir tarefas para que possa remover itens da minha lista.
+
+**Critérios de Aceitação**
+
+> **Dado** que estou na tela de tarefas\
+> **Quando** excluo uma tarefa e confirmo\
+> **Então** a tarefa é removida da lista
+
+**Prioridade**: Alta
+
+**Status**: Entregue
+
+**Teste Automatizado**:
+- TasksHome.test.tsx
+
+---
+
+### História de Usuário 6 — Concluir Tarefas
+
+**História**
+
+> Como usuário autenticado, eu quero concluir tarefas para que possa marcar meu progresso.
+
+**Critérios de Aceitação**
+
+> **Dado** que estou na tela de tarefas\
+> **Quando** concluo uma tarefa e confirmo\
+> **Então** a tarefa é marcada como concluída
+
+**Prioridade**: Alta
+
+**Status**: Entregue
+
+**Teste Automatizado**:
+- TasksHome.test.tsx
 
 ## Desenvolvimento e Contribuição
 
